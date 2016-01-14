@@ -1,0 +1,139 @@
+
+window.onload = function(){
+	//js继承实现
+	Function.prototype.extends = function(base,extend){
+		for (var prop in base )
+		{
+			this.prototype[prop] = base.prototype[prop]
+		}
+		for (var prop in extend )
+		{
+			this.prototype[prop] = extend[prop];
+		}
+	}
+	//用户 电脑 游戏
+	function Player(name){
+		this.name = name;
+		this.point = 0;//0石头；1剪刀 2布
+
+	}
+	Player.prototype.guess = function(){
+	//函数类的arguments属性的使用
+	//call和apply的区别
+	}
+
+
+	function User(name){
+		Player.call(this,name);
+	}
+	User.extends(Player,
+		{
+		guess:function(point){
+			return this.point = point;
+		}
+	});
+	
+
+	function Comp(name){
+		Player.call(this,name);
+	}
+	Comp.extends(Player,{
+		guess:function(){
+			//位运算
+			return this.point = (Math.random()*100<<2)%3
+		}
+	});
+	var user = new User("孙悟饭");
+	var comp = new Comp("比特大魔王")
+	
+	function Game(u,c){
+		this.user = u;
+		this.comp = c;
+		this.init();
+
+	}
+	Game.prototype.init = function(){
+		var names =	document.getElementsByClassName("name")
+		names[0].innerText = "我:"+this.user.name;
+		names[1].innerText = "电脑:"+this.comp.name;
+	};
+	Game.prototype.play = function(){
+		this.toggleBUtton()
+		this.startAnimate();
+		
+	};
+	Game.prototype.toggleBUtton = function(){
+		var btn = document.getElementById("play");
+		
+		if (btn.disabled)
+		{
+			btn.className = " ";
+			btn.disabled = false;
+			btn.innerText = "在玩一局"
+			
+			
+		}else{
+			btn.className = "disable"
+			btn.disabled = true;
+			
+		}
+
+	};
+	
+	Game.prototype.startAnimate = function(){
+		//让猜拳板出来
+		document.getElementById("guess").style.display = "block";
+		//改变提示文本
+		this.changeHint("请出拳。。。")
+		var anims =	document.getElementsByClassName("anim");
+
+
+		//计时器
+		var count = 0; 
+		this._interval = setInterval(function(){
+			anims[0].className = "anim user guess"+((count++)%3);
+			anims[1].className = "anim user guess"+((count++)%3);
+		},500)
+
+	};
+		
+	game = new Game(user,comp);
+	Game.prototype.changeHint = function(message){
+		document.getElementById("text").innerText = message;
+	}
+	Game.prototype.verdict =function(point){
+			clearInterval(this._interval)
+			
+			//获取动画元素
+			var anims =	document.getElementsByClassName("anim");
+			anims[0].className = "anim user guess"+this.user.guess(point);
+			anims[1].className = "anim user guess"+this.comp.guess(point);
+			document.getElementById("guess").style.display = "none";
+			
+			var res = (this.user.point - this.comp.point);
+			switch (res)
+			{
+			case 0:
+				this.changeHint("平局！！！！")
+				console.log(1)
+				break;
+			case -1:
+			case 2:
+				this.changeHint("Yea~我赢了")
+				break;
+				
+					
+			case 1:
+			case -2:
+				this.changeHint("5555555~我输了！")
+					console.log(3)
+				break;
+			}
+			this.toggleBUtton();
+			//让猜拳板消失
+			
+
+	}
+	 
+}
+var game

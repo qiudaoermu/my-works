@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>please enter your title</title>
+		<meta charset="UTF-8">
+		<meta name="Keywords" content="">
+		<meta name="Description" content="">
+		
+		<style type="text/css">
+			*{ margin:0; padding:0;}
+			#wrap{
+				width:750px;
+				height:500px;
+				border:2px solid #666;
+				margin:80px auto 0;
+				position:relative;
+			}
+			#ul li{
+				width:125px;
+				height:125px;
+				box-shadow:0 0 1px #000;
+				list-style:none;
+				float:left;
+				background-image:url(img/1.jpg);
+			}
+			#wrap input{
+				position:absolute;
+				top:50%;
+			}
+			#lBtn{ left:0px;}
+			#rBtn{ right:0px;}
+		</style>
+	</head>
+	<body>
+		
+		<div id="wrap">
+			<ul id="ul"></ul>
+			<input id="lBtn" type="button" value="左按钮" />
+			<input id="rBtn" type="button" value="右按钮" />
+		</div>
+
+		<script type="text/javascript">
+		window.onload = function(){
+
+			var oWrap = document.getElementById('wrap');
+			var oUl = document.getElementById('ul');
+			var rBtn = document.getElementById('rBtn');
+			var lBtn = document.getElementById('lBtn');
+			var oLi = oUl.getElementsByTagName('li');
+			var num = 1,Timer = null;
+			var tiime = null;
+			for ( var i=0;i<24;i++ )
+			{
+				var x = i % 6;
+				var y = Math.floor( i/6 );
+				var li = document.createElement('li');
+				li.style.backgroundPosition = x*-125 + 'px '+ y*-125 +'px';
+				
+				oUl.appendChild( li );
+			};
+			
+
+			rBtn.onclick = function(){
+				clearInterval(Timer);
+				num--;
+				if(num<1)num=24;
+				cha();
+			};
+			lBtn.onclick =function(){
+				clearInterval(Timer);
+				num ++;
+				if (num>24)num=1;
+				cha();
+			}
+
+
+			function cha(){
+				var arr = [];
+				for ( var i=0;i<24;i++)
+				{
+					arr[i] = i;
+				}
+				//alert( arr );
+				Timer = setInterval(function(){
+
+					var index = Math.floor( Math.random()*arr.length );
+					oLi[arr[index]].style.backgroundImage="url(img/"+ num +".jpg)";
+					arr.splice(index , 1);
+					if( arr.length == 0 )clearInterval( Timer );
+					console.log( arr );
+					/*
+						Math.floor => 0.9999999 0 // 1.00001  1
+						Math.random() => 0~1 [0,1) * 24  [0,24) 0~23.999999999999999999999
+						console.log( index )
+					*/
+				},30);
+			}
+			time = setInterval(function(){
+					num ++;
+				if (num>24)num=1;
+				cha();
+
+				
+			},2000)
+
+			
+
+		}
+		</script>
+	</body>
+</html>

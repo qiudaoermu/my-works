@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+<style>
+*{padding:0;margin:0}
+body{font-family:'微软雅黑'}
+.input{margin:200px auto;width:400px;}
+.pasw{width:666px;height:30px;}
+.pasw .psInut{height:30px;width:240px;border-radius:1px;border:1px solid #ddd;outline:none}
+.pasw .psw-warm{font-size:12px;color:#848484;margin-left:10px}
+.pasw .psw-warm font{color:red}
+.col{width:280px;height:10px;margin-top: 10px; margin-left: 54px;}
+.col span{width:73px;height:5px;display:block;float:left;margin-right:10px;background:#ddd	}
+.col span.col1{background-color:red}
+.col span.col2{background-color:#ffff00}
+.col span.col3{background-color:#33ffff}
+</style>
+	</head>
+	<body>
+		<div class='input'>
+			<div class='pasw'>
+				密码：
+				<input class='psInut' maxlength="20"type='text'/><label class='psw-warm'><font>*</font>2-20位字符，建议由字母，数字和符号两种以上组成
+				</label>
+
+			</div>
+			<div class='col'>
+				<span class='col1' id='span1'></span>
+				<span class='col2' id='span2'></span>
+				<span class='col3' id='span3'></span>
+			</div>
+		</div>
+	  
+	</body>
+	<script type='text/javascript' src='js/jquery-1.11.3.min.js'></script>
+
+	<script>
+		function Check(){
+			this.obj = $(obj)
+		
+		}
+		Check.prototype = {
+		
+			keyup : function(){
+			
+			
+			}
+		}
+		$('.pasw input').keyup(function(){
+			var test = $(this).val()
+			var len = test.length;
+			for (var i=0;i<len ;i++)
+			{
+				if (test.charAt(i)==' ')
+				{
+					alert('密码中不能包含入空格')
+					
+				}
+			}
+			var t1  = /\d/.test(test);
+			var t2  = /[a-z]/.test(test)
+			var t3 = /[A-Z]/.test(test)
+			var t4 = /\W/.test(test)
+			var num = t1+t2+t3+t4;
+			if (num==1&&len>=6)
+			{
+				weak()
+			}else if ((num==2&&len>=14)||(num==3&&len>=8))
+			{	
+				medium()
+
+			}else if(num==4&&len>=18)
+			{
+				strong()
+			
+			}else if(len<=6)
+			{
+				input()
+			
+			}
+		})
+		
+		function weak(){
+			$('.col #span1').addClass('col1')
+			$('.col #span2').removeClass('col2')
+			$('.col #span3').removeClass('col3')
+			
+		}
+		input()
+		function input(){
+			$('.col span').removeClass('col1')
+			$('.col span').removeClass('col2')
+			$('.col span').removeClass('col3')
+
+			
+		}
+
+		function medium(){
+			$('.col #span1').addClass('col1')
+			$('.col #span2').addClass('col2')
+			$('.col #span3').removeClass('col3')
+		}
+
+		function strong(){
+			$('.col #span1').addClass('col1')
+			$('.col #span2').addClass('col2')
+			$('.col #span3').addClass('col3')
+		}
+	</script>
+</html>

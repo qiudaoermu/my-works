@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+<style>
+	*{
+		margin:0;
+		padding:0;
+	}
+	#wrap{
+		margin:200px auto 0;
+		width:570px;
+		height:420px;
+		background:#ff9;
+		position:relative;
+	}
+	#wrap ul{
+		transform-style:preserve-3d;
+		perspective:800px;
+		position:absolute;
+		top:0px;left:0px;
+	}
+	#wrap ul li{
+		list-style:none;
+		float:left;
+		background:red;
+		opacity: 1;
+		border:1px solid rgba(0,0,0,0);
+		background-origin:border-box;
+		
+	}
+	#wrap ul li.next{
+		transform : translate(-50px,-50px) rotateX(720deg);
+		transition : all 2s;
+		border:1px solid rgba(0,0,1 ,1);
+		opacity:0;
+		
+	}
+	#wrap ul.ul1 li{background-image:url("img/1.jpg")}
+	#wrap ul.ul2 li{background-image:url("img/2.jpg")}
+	#wrap ul.ul3 li{background-image:url("img/3.jpg")}
+	#wrap ul.ul4 li{background-image:url("img/4.jpg")}
+	#wrap ul.ul5 li{background-image:url("img/5.jpg")}
+
+
+	#btn {
+		text-align:center;
+		margin-top:10px;
+		
+	}
+	#btn input{
+		width:60px;
+		height:26px;
+		font-family:"Microsoft yahei";
+	}
+</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<ul class="ul1" style="z-index:5;"></ul>
+			<ul class="ul2" style="z-index:4;"></ul>
+			<ul class="ul3" style="z-index:3;"></ul>
+			<ul class="ul4" style="z-index:2;"></ul>
+			<ul class="ul5" style="z-index:1;"></ul>
+		</div>
+		<p id="btn">
+			<input type="button" id="prev" value="上一张"/>
+			<input type="button" id="next" value="下一张"/>
+		</p>
+	</body>
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script>
+	$(function(){
+		var iX= 10;
+		var iY =7;
+		var wid = $("#wrap").width()/iX;
+		var hei = $("#wrap").height()/iY;
+		var uHTML="";
+		//var sum = 16;
+		var index = -1;
+		for (var i=0;i<iX*iY;i++ )
+		{	var y = parseInt(i/iX);
+			var x = i%iX;
+			uHTML+= "<li style='width:"+(wid-2)+"px;height:"+(hei-2)+"px;background-position:"+(-wid*x)+"px "+(-hei*y)+"px' dateX="+x+" dateY="+y+"></li>";
+		}
+
+		$("#wrap ul").append(uHTML);
+		var $li = $("#wrap ul li")
+		
+		/*
+		var num = 16;
+		var $li = $("#wrap ul li")
+		var timer = setInterval(function(){
+			num--;
+			
+			if (num<0)
+			{
+				clearInterval(timer)
+			}
+			$li.each(function(){
+				
+				if (parseInt($(this).attr("dateX")) + parseInt($(this).attr("dateY"))==num)
+				{	
+					$(this).css("background","green");
+				}
+				
+			})
+			
+		},500)
+		*/
+		
+		$("#next").click(function(){
+				index++
+				animate(index)
+				
+		})
+		function animate(index){
+			var sum = 16;
+			var timer = setInterval(function(){
+				//alert(index)
+				sum--;
+				if (sum<0)
+				{
+					clearInterval(timer)
+				}
+				for (var i=0;i<iX ;i++ )
+				{
+					for (var j=0;j<iY;j++ )
+					{
+						if ((i+j)==sum)
+						{
+							//document.body.innerHTML+=i+","+j;
+							
+							$("#wrap ul").eq(index).find("li").EQ(i,j,iX).addClass("next")
+						}	
+					}
+					
+				}
+			//document.body.innerHTML+="<br/>"
+			
+			},50)
+		}
+		
+		
+	
+	});
+	
+	$.fn.extend({
+			EQ : function(x,y,iX){
+			
+				return  $(this).eq(x+y*iX)
+			}
+			
+	}); 
+	
+	</script>
+
+</html>

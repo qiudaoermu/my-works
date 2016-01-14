@@ -1,0 +1,404 @@
+
+
+
+	(function (){
+		
+		function Fly(str){
+			return new Init(str)
+		}
+		function Init(str){
+			
+			this.thisObj = this.init(str);
+			this.length = this.thisObj.length;
+		}
+
+		
+		Init.prototype = {
+		
+			init : function(str){
+				var arr = []
+				var lowstr = (typeof str).toLowerCase();
+				if (lowstr=="string")
+				{	
+					var newstr
+					var strarr = lowstr.split(" ");
+					if (strarr.length==1)
+					{
+						if (str.charAt(0)=="#")
+						{	
+							newstr = str.substring(1)
+							arr[0] = document.getElementById(newstr)
+						
+						}
+						else if (str.charAt(0)==".")
+						{	
+							newstr = str.substring(1)
+							if (document.getElementsByClassName)
+							{
+								arr =  document.getElementsByClassName(newstr)
+								
+							}else 
+							{	
+								var all = document.getElementsByTagName("*")
+								var reg = new RegExp("\\b"+newstr+"\\b")
+								for (var i=0;i<all.length;i++ )
+								{		
+									if (reg.test(all[i].className))
+									{
+										arr.push(all[i])
+									}
+								}
+								
+							}
+						}else{
+							arr = document.getElementsByTagName(str)
+						}
+
+					}else{
+						//Fly("#bannner #wrap ul li") 子元素遍历，父元素遍历，split遍历;
+						for (var i=0;i<strarr.length-1;i++ )
+						{	
+							if (strarr[i].parentNode!=document.body)
+							{	
+								var last = Fly(strarr[strarr.length-1]);
+								
+								for (var k=0;k<Fly(macthParent).length ;k++ )
+								{
+									for (var j=0;j< last.length;j++ )
+									{
+										if (last[j].parentNode==Fly(strarr[i]))
+										{
+											
+										}
+									}
+								}
+
+						}
+
+
+					}
+					
+				
+
+
+				}else if (lowstr=="object")
+				{
+					if (str.length==undefined)
+					{	
+						arr[0] = str
+					
+					}else{
+					   arr = str
+					}
+				};
+				for (var i=0;i<arr.length ;i++ )
+				{
+					if (!arr[i].FlyMoveArr)
+					{
+						arr[i].FlyMoveArr = []
+					}
+				}
+				return arr
+			},			
+			each : function(fn){
+			
+				for (var i=0;i<this.thisObj.length;i++ )
+				{
+					fn.call(this.thisObj[i])
+				}
+			},
+			show : function(){
+					this.each(function(){
+						this.style.display = "block"
+					
+					})		
+				},
+			hide :function(){
+					this.each(function(){
+						this.style.display = "none"
+					
+					})
+			},
+			hover : function(fn1,fn2){
+					this.each(function(){
+						this.onmouseenter = fn1
+					
+					})
+					this.each(function(){
+						this.onmouseleave = fn2
+					
+					})
+			},
+			focus :function(fn){
+				this.each(function(){
+						this.onfocus = fn
+				
+				})
+				return this
+
+			},
+			blur : function(fn){
+				this.each(function(){
+						this.onblur = fn
+				
+				})
+				return this
+			},
+			fadeIn :function(){
+				
+			},
+			getStyle : function(attr){
+					
+					return this.thisObj[0].currentStyle?this.thisObj[0].currentStyle[attr]:getComputedStyle(this.thisObj[0])[attr];
+			},
+			
+			setStyle : function(Mjson){
+				this.each(function(){
+					for (var attr in Mjson )
+					{	
+						this.style[attr] = Mjson[attr]
+					}
+				})
+			},
+			find : function(str){
+				var all = this.thisObj;
+				var theSon = Fly(str).thisObj;
+				for (var i=0;i<theSon.length;i++ )
+				{	 
+				 var objparent = theSon[i].parentNode;
+				 if (objparent!=document.body)
+				   {
+						for (var j=0;j<all.length;j++ )
+						{
+							if (all[j]==objparent)
+							{
+								return Fly(str)
+							}
+						}
+						
+				   }		
+					
+				}	
+//				var thisObj = this.thisObj;
+//				var all = Fly( str );
+//				var newArr = [];
+//				for ( var i=0;i<all.length;i++ )
+//				{
+//					var objParent = all.thisObj[i].parentNode;
+//					
+//					while ( objParent != document.body )
+//					{
+//						if ( has( thisObj , objParent )  )
+//						{
+//							newArr.push( all.thisObj[i] );
+//						}
+//						function has( thisObj , objParent ){
+//							for ( var i=0;i<thisObj.length;i++ )
+//							{
+//								if ( objParent == thisObj[i] )
+//								{
+//									return true;
+//								}
+//							}
+//							return false;
+//						}
+//						objParent = objParent.parentNode;
+//					}
+//				}
+//				
+//				return Fly( newArr );
+			
+
+			},
+			slidedown :function(timer){
+				timer = timer||400;
+				this.each(function(){
+					var display = (Fly(this).getStyle("display")).toLowerCase();
+					var target,startval,time = null,This=this;
+					var startime = new Date();
+					if (display=="none")
+					{
+							this.style.display = "block";
+							this.style.overflow ="hidden";
+							target = parseInt(Fly(this).getStyle("height"))
+							this.style.height = "0px";
+						time = this.FlyMoveArr[this.FlyMoveArr.length] = setInterval(function(){
+							var nowtime = new Date();
+							
+							var prop = (nowtime - startime)/timer;
+							This.style.height= prop*target+"px";
+							if (prop>=1)
+							{
+								clearInterval(time)
+							}
+						},10)
+					}else{
+						
+						startval = parseInt(Fly(this).getStyle('height'));
+						Fly(this).setStyle({height:""});
+						target = parseInt(Fly(this).getStyle('height'));
+						Fly(this).setStyle({height:startval+"px",overflow:"hidden"})
+						time = this.FlyMoveArr[this.FlyMoveArr.length] = setInterval(function(){
+							var nowtime = new Date();
+							var prop = (nowtime - startime)/timer;
+							This.style.height=prop*(target-startval)+startval+"px";
+							if (prop>=1)
+							{
+								clearInterval(time)
+							}
+						},10)
+
+					}
+				});
+				return this;
+			},
+			stop :function(){
+				this.each(function(){
+					for (var i=0;i<this.FlyMoveArr.length ;i++ )
+					{
+						clearInterval(this.FlyMoveArr[i])
+					}
+					
+				})	
+				return this;
+			},
+			slideup : function(timer){
+				timer=timer||400;
+				this.each(function(){
+					var height = parseInt(Fly(this).getStyle("height"))
+					
+					var  This=this; 
+					var startime = new Date();
+					var time = this.FlyMoveArr[this.FlyMoveArr.length]  = setInterval(function(){
+					
+						var nowtime = new Date();
+						var duration = (nowtime - startime);
+						var prop = (nowtime - startime)/timer;
+						var nowHeiht = (1-prop)*height;
+						This.style.height=nowHeiht+"px";
+						if (prop>=1)
+						{	
+							prop=1;
+							nowHeiht = (1-prop)*height;
+							This.style.height=nowHeiht+"px";
+							clearInterval(time)
+							This.style.display = "none";
+							This.style.overflow = '';
+							This.style.height = '';
+						}else
+						{
+							This.style.height=(1-prop)*height+"px"
+							
+						}
+						
+
+					},10)
+				
+				
+				})
+			
+			},
+			addClass : function(){
+				var arg = arguments;
+				this.each(function(){	
+					for (var i=0;i<arg.length;i++ )
+					{	
+						var reg = new RegExp("\\b"+arg[i]+"\\b");
+						if (!reg.test(this.className))
+						{	
+							this.className?this.className += " "+arg[i]:this.className +=arg[i]
+
+						}												
+					}
+					
+				})
+				
+			},
+			removeClass :function(){
+				var arg = arguments;
+				this.each(function(){
+					if (arg.length)
+					{
+						for (var i=0;i<arg.length;i++ )
+						{
+							var reg = new RegExp("\\b"+arg[i]+"\\b");
+							var newstr = this.className.split(" ");
+							for (var j=0;j<newstr.length;j++)
+							{	
+								if (reg.test(newstr[j]))
+								{
+									newstr.splice(j,1)
+								}
+							}		
+							this.className = newstr.join(" ");	
+						}	
+
+					}else
+						
+					{
+						this.className = "";
+					}
+				
+				})
+			},
+			fadeOut : function(timer){
+				timer = timer||400;
+				this.each(function(){
+					var starvalO = Fly(this).getStyle('opacity');
+					var starvalF = starvalO*100;
+					var target = 1;
+					//filter:alpha(opacity=100);
+					var startime = new Date();
+					var This = this;
+					var time = this.FlyMoveArr[this.FlyMoveArr.length]  = setInterval(function(){
+						var nowtime = new Date();
+						
+						var prop = (nowtime - startime)/timer;
+						This.style.opacity = (1-prop)*target;
+						This.style.filter = 'alpha(opacity='+ (1-prop)*target*100+')'
+						if (prop>=1)
+						{
+
+							clearInterval(time)
+						}
+					
+					},30)
+					
+				})
+				
+				
+				
+			},
+			fadeIn :function(timer){
+				timer = timer||400;
+				this.each(function(){
+					var starvalO = Fly(this).getStyle('opacity');
+					var starvalF = starvalO*100;
+					var target = 1;
+					var startime = new Date();
+					var This = this;
+					var time = this.FlyMoveArr[this.FlyMoveArr.length]  = setInterval(function(){
+						var nowtime = new Date();
+						var prop = (nowtime - startime)/timer;
+						This.style.opacity = prop*target;
+						This.style.filter = 'alpha(opacity='+ prop*target*100+')'
+						if (prop>=1)
+						{
+
+							clearInterval(time)
+						}
+					
+					},30)
+					
+				})
+				
+			}
+			
+		}
+
+		
+		
+			
+		window.Fly = Fly;
+			
+	})()

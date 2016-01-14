@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+<style>
+*{margin:0;padding:0;}
+	#banner{
+			margin:0 auto 0;
+			width:520px;
+			height:280px;
+			position:relative;
+			overflow:hidden;
+			
+			}
+	#banner #pic{width:10000px;margin-left:-520px;}
+	#banner #pic img{
+					float:left;	
+					}
+	#tab{
+		 width:110px;
+		 height:20px;
+		 background:rgba(255,255,255,.5);
+		 position:absolute;
+		 top:224px;
+		 left:50%;
+		 border-radius:9px;
+		 margin-left:-55px;
+		 text-align:center;
+
+		 }
+	#tab ul{width:120px;
+			height:20px;
+			margin:0 auto 0;}
+	#tab ul li{
+			   width:12px;
+			   height:12px;
+			   float:left;
+			   background:#a7a7a7;
+			   margin:5px;
+			   list-style:none;
+			   border-radius:50%;
+				}
+	#tab ul li.on{background:red;}
+	#btu div {
+			   background:rgba(0,0,0,.5);
+			   position:absolute;
+			   top:50%;
+			   width:40px;
+			   height:60px;
+			   text-align:center;
+			   line-height:60px;
+			   color:#fff;
+			   font-weight:bold;
+			   margin-top:-30px;
+		  }
+	#btu div.left{
+			   left:15px;
+			  
+			   }
+	#btu div.right{
+				right:15px;
+				
+				}
+
+</style>
+	</head>
+	<body>
+	
+	<div id="banner">
+		<div id="pic">
+			<img src="img/5.jpg"/>
+			<img src="img/1.jpg"/>
+			<img src="img/2.jpg"/>
+			<img src="img/3.jpg"/>
+			<img src="img/4.jpg"/>
+			<img src="img/5.jpg"/>
+			<img src="img/1.jpg"/>
+			
+		
+		</div>
+		<div id="tab">
+			<ul>
+				<li class="on"></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+		<div id="btu">
+			<div class="left">&lt;</div>
+			<div class="right">&gt;</div>
+
+		</div>
+	</div>
+	
+	  
+	</body>
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+	<script>
+		
+			var $li = $("#tab ul li");
+			var $pic = $('#pic');
+			var index=0;
+			var iMgWidth = $('#pic img').width();
+			var oBtnDiv = $("#btu div")
+			var oBnner = $("#banner")
+			$li.click(function(){
+				index = $(this).index();
+				iMgcha()
+			})
+			oBtnDiv.click(function(){
+				
+				var bIndex = $(this).index();
+				bIndex?index++:index--;
+				iMgcha(index)
+			})
+			
+			oBnner.hover(function(){
+				clearInterval(timer)
+				
+			
+			},function(){autotimer()})
+
+
+			function autotimer(){
+				
+				timer = setInterval(function(){
+					index++
+					iMgcha()
+					},2000) 
+					
+			}
+			autotimer()
+			 
+			function iMgcha(){
+				if (index>$li.length-1)
+					{	
+						$li.eq(0).addClass("on").siblings().removeClass();
+						$("#pic").stop(true,true).animate({"marginLeft":-iMgWidth*(index+1)+"px"},800,function(){
+								$(this).css("marginLeft",-iMgWidth +"px")
+								index=0;
+						})
+					}else if(index<0){
+					
+						$li.eq(index).addClass("on").siblings().removeClass();
+						$("#pic").stop(true,true).animate({"marginLeft":-iMgWidth*(index+1)+"px"},800,function(){
+								$(this).css("marginLeft",-iMgWidth*$li.length)
+								index=$li.length-1;
+						})
+					}else{
+						$li.eq(index).addClass("on").siblings().removeClass();
+					$("#pic").stop(true,true).animate({"marginLeft":-iMgWidth*(index+1)+"px"},800)
+					}	
+				
+			}
+		
+	
+	</script>
+</html>

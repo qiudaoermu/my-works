@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+
+	<link rel = "stylesheet" type="text/css" href="css/style.css"/>
+	
+	</head>
+	<body>
+
+		
+	<!--header start-->
+
+
+		<div id = wrap>
+			<div id ="nva">
+				<div id ="n-left">
+					<a href="#">小米网</a><span>|</span>
+					<a href="#">MIUI</a><span>|</span>
+					<a href="#">米聊</a><span>|</span>
+					<a href="#">游戏</a><span>|</span>
+					<a href="#">多看阅读</a><span>|</span>
+					<a href="#">云服务</a><span>|</span>
+					<a href="#">小米网移动版</a><span>|</span>
+					<a href="#">问题反馈</a><span>|</span>
+					<a href="#">Select Region</a>
+				</div>
+
+				<div id ="bar-card">
+					<a id="shop" href="#">
+						<i class="iconfront">&#xf0148</i>
+						购物车
+						<span>( 0 )</span>
+					</a>
+					<div id="slidebar">
+						购物车中还没有商品，赶紧选购吧！
+					</div>
+				</div>
+
+				<div id ="n-right">
+					<a href="#">登录</a>
+					<span>|</span>
+					<a href="#">注册</a>
+					
+				</div>
+				
+			</div>
+		
+		</div>
+		
+	<!--header end-->
+	  
+	</body>
+<script>
+
+
+	function Progrom(id){
+			this.obj = this.getId(id);
+			this.t1 = 0;
+		}
+	Progrom.prototype = {
+			getId : function(id){
+				
+				if ((typeof id)=="string")
+				{	
+						if (id.charAt(0)=="#")
+					{
+						newid = id.substring(1);
+						return document.getElementById(newid)
+					}
+				}else{
+					return id;
+				}
+			},
+			setStyle : function(JSon){
+				for (var attr in JSon)
+				{
+					this.obj.style[attr] = JSon[attr]
+				}	
+			},
+			getStyle : function(attr){
+				return this.obj.currentStyle?this.obj.currentStyle[attr]:getComputedStyle(this.obj)[attr];
+			},
+
+			hide : function(){
+				this.obj.style.display = "none"	
+			},
+			show :function(){
+				this.obj.style.display = "block"	
+			},
+			hover :function(fn1,fn2){
+				this.obj.onmouseenter = fn1;
+				this.obj.onmouseleave = fn2
+			},
+			
+			find :function(str){
+				var all = this.obj;
+				var newobj = Fly(str);
+				if (newobj.obj.parentNode == all )
+				{
+					return Fly(str)
+				}
+			},
+			addClass :function(){
+				
+			},
+			removeClass :function(){
+				
+			},
+			slidedown : function(timer){
+				this.obj.style.display = "block";
+				this.obj.style.overflow ="hidden";
+				var height = parseInt(this.getStyle("height"))
+				this.obj.style.height = "0px";
+			
+				var  This=this;
+				var startime = new Date();
+				window.time = setInterval(function(){
+				
+					var nowtime = new Date();
+					duration =(nowtime - startime);
+					var prop = (nowtime - startime)/timer;
+					var nowHeiht = prop*height;
+					This.obj.style.height=nowHeiht+"px";
+					//console.log(duration)
+					if (prop>=1)
+					{
+						clearInterval(window.time)
+					}
+				},10)
+			},
+			slideup :function(timer){
+					var height = parseInt(this.getStyle("height"))
+				
+					var  This=this;
+					window.time = setInterval(function(){
+					
+						window.nowtime = new Date();
+						duration = (nowtime - startime);
+						var prop = (nowtime - startime)/timer;
+						var nowHeiht = (1-prop)*height;
+						This.obj.style.height=nowHeiht+"px";
+						console.log(duration)
+						if (prop>=1)
+						{	
+							prop=1;
+							nowHeiht = (1-prop)*height;
+							This.obj.style.height=nowHeiht+"px";
+							clearInterval(window.time)
+							This.obj.style.display = "none";
+							This.obj.style.overflow = '';
+							This.obj.style.height = '';
+						}else
+						{
+							This.obj.style.height=(1-prop)*height+"px"
+							
+						}
+						
+
+					},10)
+				
+				
+			},
+			stop : function(str,timer){
+				
+				
+			}
+
+	}	//原型函数属性在内部执行问题
+	
+	//pro1.getId("bar-card");
+	//pro1.changColor("#ff00cc")
+	//console.log(Fei("bar-card"))//已经执行this.getId(id);
+	function Fly(id){
+		return new Progrom(id);
+	}
+//	.setStyle({"color":"#f93"});
+//	Fly("bar-card").setStyle({"width":"100px","background":"#6600ff"});
+
+//	Fly("#bar-card").hover(function(){
+//		Fly(this).setStyle({"background":"#fff"})
+//		Fly(this).find("#shop").setStyle({"color":"#f93"})
+//		Fly("#slidebar").slidedown(200);
+//	},function(){
+//		Fly(this).setStyle({"background":"#424242"})
+//		Fly(this).find("#shop").setStyle({"color":"#b0b0b0"})
+//		Fly("#slidebar").slideup(200)
+//	})
+//	var fa = Fly("#slidebar")
+//	Fly("#slidebar").slidedown(200);
+//	setTimeout(function(){
+//		Fly("#slidebar").slidedown(200);
+//	},100)
+	//console.log(Fly("#slidebar")==Fly("#slidebar"))
+	
+
+
+//	var a = document.getElementById("nva");
+//	console.log(a.parentNode.id)
+//	console.log(Fly("nva").obj.parentNode.id)
+//	//Fly("slidebar").hide()
+//	//console.log(Fly("bar-card").getStyle("width"))
+</script>
+</html>

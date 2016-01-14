@@ -1,0 +1,8 @@
+
+
+Fly("#bar-card").hover(function(){
+	//Fly("#slidebar").slidedown(2000)
+	alert(333)
+},function(){
+	//Fly("#slidebar").slideup(2000)
+})

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+<style>
+ .all_bg{width:800px;height:600px;margin:100px auto 0;border:1px solid #000}
+ #allcanvas{
+	position:relative;
+	width:800px;
+	height:600px;
+	margin: 0px;
+ 
+ }
+#canvas1{position:absolute;z-index:1;bottom:0;left:0}
+#canvas2{position:absolute;z-index:2;bottom:0;left:0}
+</style>
+	</head>
+	<body>
+
+		<div class='all_bg'>
+			<div id='allcanvas'>
+				<canvas id='canvas1' width='800' height='600'></canvas>
+				<canvas id='canvas2' width='800' height='600'></canvas>
+			</div>
+		</div>
+
+	  
+	</body>
+     <script>
+	
+	var cxt2
+	var canHeight
+	var canWidth
+
+	
+	
+	document.body.onload = function(){
+		var img  = new Image();
+		img.src='images/background.jpg'
+		var can2 = document.getElementById('canvas2')
+		cxt2 = can2.getContext('2d')
+		canHeight = can2.height;
+		canWidth = can2.width;
+		
+		
+		draw(cxt2,img)
+//		cxt2.beginPath();
+//		cxt2.moveTo(200,canHeight);
+//		cxt2.lineTo(200,canHeight/2);
+//		cxt2.lineWidth=20;
+//		cxt2.lineCap='round';
+//		cxt2.strokeStyle="#fff";
+//		cxt2.stroke()
+		}
+		function draw(obj,img){
+			obj.drawImage(img,0,0,800,600)
+		}
+	
+	 </script>
+
+
+
+</html>

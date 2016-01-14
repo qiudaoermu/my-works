@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>飞机大战</title>
+ </head>
+ <style>
+ /*子弹生成写在了plane里，敌机产生写在了start里面*/
+ /*子弹速度写在了子弹里，敌机速度写在了敌机里面*/
+ /*子弹越区去除写在了子弹里，敌机越区去除写在了敌机里面*/
+ /* 子弹与敌军相撞去除写在了敌军里面，飞机与敌军相撞写在了敌军里面 */
+*{margin:0;padding:0;font-family:"微软雅黑"}
+body{background:#000;}
+#box{width:300px;
+	 height:500px;
+	 border:10px solid #fff;
+	 margin:50px auto 0;
+	 position:relative;
+	 background:url("img/1634093_104156_9658.jpg");
+	 background-size:cover;
+	 overflow:hidden;
+	 }
+	 /*autoplay="autoplay"*/
+#box h3{color:#fff;font-size:24px;text-align:center;}
+#box p{color:#000;width:150px;height:40px;background:#fff;margin:50px auto 0;text-align:center;line-height:40px;}
+#box .plane{position:absolute;z-index:2;width:75px;height:45px;}
+#box .bullet{position:absolute;width:26px;height:47px;}
+#box .oIMg1{width:300px;height:510px;position:absolute;top:0px;z-index:0;}
+#box .oIMg2{width:300px;height:510px;position:absolute;top:500px;z-index:0;}
+#box .enemy{position:absolute;z-index:2;top:-30px;left:0px;}
+#box .over{width:200px;height:340px;background:#fff;opacity:0.8;margin:10px auto 0;}
+#box .score{position:absolute;z-index:2;left:10px;top:10px;color:#fff;font-size:25px;}
+/*autoplay="autoplay"*/
+ </style>
+	<body>
+		<div id="box"></div>
+		<video src="music/bgm_zhandou2.mp3" id="musci"   loop="loop" preload="auto"></video>
+		<video src="music/short_lazer.mp3"  id="short"  preload="auto"  ></video>
+		<video src="music/short_lazer2.mp3"  id="short2"  preload="auto"  loop="loop"></video>
+		<video src="music/short_lazer3.mp3"  id="short3"  preload="auto"  loop="loop"></video>
+		<video src="music/bgm_zhuxuanlv.mp3"  id="bgmusci" autoplay="autoplay"   ></video>
+		<video src="music/474.mp3"  id="explore" preload="auto"  ></video>
+		<video src="music/gameover.mp3"  id="over"   ></video>
+
+	</body>
+
+ <script type="text/javascript">
+
+		window.onload = function(){
+
+			Game.init();
+
+		}
+	var Game = {
+		"box":document.getElementById("box"),
+		//图片预加载
+		'img':function(){
+			Game.oPlane = new Image();
+			Game.oPlane.src = "img/plane3.png";
+			Game.oPlane.className="plane"//飞机图片预加载
+			Game.oIMg1 = new Image();
+			Game.oIMg1.src = "https://img.alicdn.com/imgextra/i3/2679309475/TB2HhGogVXXXXbpXXXXXXXXXXXX_!!2679309475.jpg";//背景1图片预加载
+			Game.oIMg1.className = "oIMg1";
+			Game.oIMg2 = new Image();
+			Game.oIMg2.src = "https://img.alicdn.com/imgextra/i3/2679309475/TB2HhGogVXXXXbpXXXXXXXXXXXX_!!2679309475.jpg";//背景2图片预加载
+			Game.oIMg2.className = "oIMg2";
+		
+		},
+		//场景初始化
+		"init":function(){
+			Game.box.innerHTML="";
+			Game.img();
+			var oTitle = document.createElement("h3")	
+			var oDiv = Game.ctE("div");
+				oDiv.innerHTML = '<p >简单</p><p >中等</p><p>困难</p>'
+			Game.box.appendChild(oTitle);
+			Game.box.appendChild(oDiv);
+			var oP=oDiv.children;
+			for (var i=0;i<oP.length ;i++ )
+			{
+				oP[i].index = i;
+				oP[i].onmouseover = function(){
+					this.style.background = "#a6a600";	
+				}
+				oP[i].onmouseout = function(){
+					this.style.background = "#fff";		
+				}
+				oP[i].onclick = Game.start;	
+			}
+		},
+		//游戏开始
+		"start":function(ev){
+			Game.overNum = false;
+			
+			Game.diffNum=this.index;
+			ev = ev||event;
+			Game.box.innerHTML="";
+			Game.score();
+			Game.plane(ev);
+			/****敌军生成速度****************************************/
+			Game.start.timer = setInterval(	function(){Game.enemy()}, Game.diff[Game.diffNum][0]);
+			Game.btmusci();
+			Game.bgmusci();
+			Game.start.timer2 = setInterval(function(){
+				    var height1 = parseInt(Game.getStyle(Game.oIMg1,"top"))				
+					Game.oIMg1.style.top =height1+3+'px';
+					if ( height1>=500 )
+					{
+						Game.oIMg1.style.top="-500px"
+					}
+					if (Game.overNum)
+					{
+						clearInterval(Game.start.timer2)
+					}
+			},30);//第一张背景图片移动
+			
+			Game.start.timer3 = setInterval(function(){
+				    var height2 = parseInt(Game.getStyle(Game.oIMg2,"top"))
+					Game.oIMg2.style.top =height2+3+'px';
+					
+					if ( height2>=500 )
+					{
+						Game.oIMg2.style.top="-500px"
+					}
+					if (Game.overNum)
+					{
+						clearInterval(Game.start.timer3)
+					}
+			},30);//第二张背景图片移动	
+		},
+		"diff":[
+		//敌军生成速度，敌机飞行速度，子弹产生速度
+			[800,4,400],
+			[500,5,200],
+			[500,20,200]
+		
+		],
+		//我方战机
+		'plane':function(ev){
+			Game.img();
+			Game.box.appendChild(Game.oIMg1);//背景1加载图片放入盒子
+			Game.box.appendChild(Game.oIMg2);//背景2加载图片放入盒子
+			Game.box.appendChild(Game.oPlane);//飞机加载图片放入盒子	
+			var x = ev.pageX;
+			var y = ev.pageY;
+			var bW=Game.box.offsetTop+(Game.box.offsetHeight-parseInt(Game.getStyle(Game.box,"height")))/2+Game.oPlane.clientHeight/2;
+			var bL=Game.box.offsetLeft+(Game.box.offsetWidth-parseInt(Game.getStyle(Game.box,"width")))/2+Game.oPlane.clientWidth/2;
+			var top  = ev.pageY-bW;//飞机左边
+			var left = ev.pageX-bL;
+			Game.oPlane.style.cssText ="top:"+top+"px;left:"+left+"px;"
+			document.onmousemove = function(ev){
+				ev=ev||event;
+				top  = ev.pageY-bW;//飞机顶部
+			    left = ev.pageX-bL;//飞机左边
+				var topMin = parseInt(Game.getStyle(Game.oPlane,"top"))//最高
+				var topMax = parseInt(Game.getStyle(Game.box,"height"))-parseInt(Game.getStyle(Game.oPlane,"height"))//最底
+				var leftMin = -parseInt(Game.getStyle(Game.oPlane,"width"))/2//最左
+				var leftMax = parseInt(Game.getStyle(Game.box,"width"))-parseInt(Game.getStyle(Game.oPlane,"width"))/2;//最右
+				if (top<0)
+				{	
+					top=0
+				}else if (top>=topMax)
+				{
+					top	= topMax
+				}
+			
+				if (left <= leftMin)
+				{
+					left = leftMin;
+				}else if (left>=leftMax)
+				{
+					left = leftMax;
+				}
+
+			    Game.oPlane.style.cssText ="top:"+top+"px;left:"+left+"px;"
+			};
+			/***子弹产生速度***************************************************************************/
+			Game.bTimer = setInterval(	function(){Game.bullet(left,top)},	Game.diff[Game.diffNum][2])
+			//Game.bTimer1 = setInterval(	function(){Game.shmis()},30)
+			///Game.bTimer2 = setInterval(	function(){Game.shmis2()},600)
+			//Game.bTimer3 = setInterval(	function(){Game.shmis3()},1200)
+		},
+		//子弹 bullet(一个)
+		"bullet":function(obLeft,obTop){
+			var oBlet=document.createElement("img");
+			oBlet.src = "img/bullet5.png";
+			oBlet.className="bullet"
+			Game.box.appendChild(oBlet);
+
+			var top= obTop-parseInt(Game.getStyle(oBlet,"height"));//子弹坐标（顶）
+			var left =obLeft +Game.oPlane.clientWidth/2-parseInt(Game.getStyle(oBlet,"width"))/2//子弹坐标（左）
+			oBlet.style.cssText ="top:"+top+"px;left:"+left+"px";
+			oBlet.timer = setInterval(function(){
+		/******子弹飞行速度***************************************************************************/
+				
+				if (!oBlet.parentNode)
+				{
+					clearInterval(oBlet.time)
+					return;
+				};
+				oBlet.style.top=parseInt(Game.getStyle(oBlet,"top"))-32+"px"
+				if (parseInt(Game.getStyle(oBlet,"top"))<-57)
+				{	
+					clearInterval( oBlet.timer );
+					oBlet.parentNode.removeChild(oBlet);
+				};
+				
+			},200)
+		},
+
+		'enemy' : function(){
+					var oEnemy = Game.ctE('img');
+					oEnemy.src = "img/1.png";
+					for (var i=0;i<5 ;i++ )
+					{
+						var a = Math.ceil(Math.random()*6)
+						//console.log(a)
+						oEnemy.src = "img/"+a+".png";
+					}
+					oEnemy.className = 'enemy';
+					Game.box.appendChild( oEnemy );
+					var left = Math.random()*(Game.box.clientWidth - 50);
+					var top = parseInt(Game.getStyle( oEnemy , 'top' ));
+					oEnemy.style.left = left + 'px';
+					oEnemy.timer = setInterval(function(){
+						if ( Game.overNum )
+						{
+							
+							clearInterval( oEnemy.timer );
+							oEnemy.parentNode.removeChild( oEnemy );
+							return;
+						}
+						/*敌军下落速度 ******************************** */
+						top += Game.diff[Game.diffNum][1];
+						oEnemy.style.top = top + 'px';
+						if ( top > Game.box.clientHeight )
+						{
+							clearInterval( oEnemy.timer );
+							oEnemy.parentNode.removeChild( oEnemy );
+						}else
+						{
+							var allB = Game.box.getElementsByClassName('bullet');
+							for ( var i=0;i<allB.length;i++ )
+							{
+								if (Game.pz( oEnemy , allB[i] ) )
+								{	
+									Game.shmis();
+									console.log("击中！")
+									allB[i].parentNode.removeChild( allB[i] );
+
+							
+									var num=6;
+									oEnemy.timer2 = setInterval(function(){
+										
+										num++
+										oEnemy.src = "img/"+num+".png";
+										if (num>=11)
+										{
+											clearInterval(oEnemy.timer2)}
+										
+										},50)
+									
+									
+									
+									
+									clearInterval( oEnemy.timer );
+									setTimeout( function(){ oEnemy.parentNode.removeChild(oEnemy) },500 );
+									Game.num += 10;
+									Game.oScore.innerHTML = Game.num;
+								};
+							}
+							if ( Game.pz( oEnemy , Game.oPlane ) )
+							{
+								Game.sthmis();
+								Game.overNum = true;
+								oEnemy.src = 'img/boom.png';
+								clearInterval( oEnemy.timer );
+								setTimeout( function(){ oEnemy.parentNode.removeChild(oEnemy) },500 );
+								Game.oPlane.src = 'img/boom2.png';
+								clearInterval( Game.bTimer );
+									clearInterval( Game.bTimer1 );
+								
+								clearInterval( Game.bTimer2 );
+								clearInterval( Game.bTimer3 );
+								clearInterval( Game.start.timer );
+								document.onmousemove = null;
+								setTimeout( Game.over , 1500 );
+								Game.stexpl();
+								Game.stbtmusci();
+								Game.explore();
+								setTimeout( Game.Gover , 1500 );
+							};
+						}
+
+					},30);
+
+					//oEnemy.pzTest = setInterval(function(){},);
+				},
+
+
+		"over":function(){
+				Game.box.innerHTML="";
+				
+				var oOVer = Game.ctE("div")
+				var oP1 = Game.ctE("p")
+				var reSt = Game.ctE("button");
+				reSt.id="rest"
+				reSt.innerHTML="重新开始"
+				
+				oOVer.appendChild(reSt);
+				oP1.innerHTML="GAME　OVER"
+				oOVer.appendChild(oP1)
+				oOVer.className="over";
+				Game.box.appendChild(oOVer);
+				//Game.start=false;
+				
+				document.getElementById("rest").onclick = function(){
+					Game.init();
+					Game.sGtover();
+				}
+
+				
+		},
+		"score":function(){
+				Game.oScore = Game.ctE("span")
+				Game.oScore.className="score";
+				Game.num=0;
+				Game.oScore.innerHTML=0;
+			
+
+				Game.box.appendChild(Game.oScore)
+
+		},
+		"pz":function(obj1,obj2){
+			var L1=parseInt(Game.getStyle(obj1,"left"));
+			var R1=parseInt(Game.getStyle(obj1,"left"))+parseInt(Game.getStyle(obj1,"width"));
+			var T1=parseInt(Game.getStyle(obj1,"top"));
+			var B1=parseInt(Game.getStyle(obj1,"top"))+parseInt(Game.getStyle(obj1,"height"));
+
+			var L2=parseInt(Game.getStyle(obj2,"left"));
+			var R2=parseInt(Game.getStyle(obj2,"left"))+parseInt(Game.getStyle(obj2,"width"));
+			var T2=parseInt(Game.getStyle(obj2,"top"));
+			var B2=parseInt(Game.getStyle(obj2,"top"))+parseInt(Game.getStyle(obj2,"height"));
+
+			if (T1>B2||L1>R2||R1<L2||B1<T2)
+			{
+				return false;
+
+			}else{
+
+				
+				return true;
+				
+				
+			}
+
+
+
+		},
+		
+		"btmusci":function(){
+			var oMusci = document.getElementById('musci');
+			oMusci.play();
+		},
+		"stbtmusci":function(){
+			var oMusci = document.getElementById('musci');
+			oMusci.pause();
+		},
+		"Gover":function(){
+			var over = document.getElementById('over');
+			over.play();
+		},
+		"sGtover":function(){
+			var over = document.getElementById('over');
+			over.pause();
+		},
+
+		"shmis":function(){
+			var sHortMusci = document.getElementById('short');
+			sHortMusci.play();
+		},
+		"sthmis":function(){
+			var sHortMusci = document.getElementById('short');
+			sHortMusci.pause();
+		},
+		"shmis2":function(){
+			var sHortMusci2 = document.getElementById('short2');
+			sHortMusci2.play();
+		},
+		"shmis3":function(){
+			var sHortMusci3 = document.getElementById('short3');
+			sHortMusci3.play();
+		},
+		"explore":function(){
+			var eXplore = document.getElementById('explore');
+			eXplore.play();
+		},
+		"stexpl":function(){
+			var eXplore = document.getElementById('explore');
+			eXplore.pause();
+		},
+		"bgmusci":function(){
+			var bgMusci = document.getElementById('bgmusci');
+			//bgMusci.removeAttribute("autoplay");
+			bgMusci.pause();
+		
+		},
+		
+		"ctE":function(tagName){
+			return document.createElement(tagName)
+		
+		},
+		"getStyle":function(obj,attr){
+			return obj.currentStyle?obj.currentStyle[attr]:getComputedStyle(obj)[attr]
+		}
+		//音乐
+		
+	};
+	
+ 
+ 
+ </script>
+</html>

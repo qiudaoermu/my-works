@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>javascript变量</title>
+
+<style>
+	*{margin:0px;padding:0px;}
+
+	html,body{width:100%;height:100%;overflow:hidden}
+#all{width:100%;height:804px;margin:50px auto;}
+#cargr{width:1290px;height:804px;position:relative;margin:0 auto}
+.input input{width:100px;height:40px;display:inline-block;position:absolute;top:50%;margin-top:-20px ;z-index: 3;}
+.input input.l-input{left:-110px}
+.input input.r-input{right:-110px}
+#all #box1 {width:1290px;height:804px; transform-style:preserve-3D;}
+#all #box1 li{width:213px;
+			  height:199px;
+			  border:1px solid rgba(0,0,0,0.3);
+			  float:left;
+			  list-style:none;
+			  box-shadow: 2px 2px 10px #666;
+			  opacity:0;border-radius:100%;
+			  transform:rotateY(-45deg) translateZ(-250px);
+
+
+			  }
+#box1 #blco{display:none}
+
+</style>
+</head>
+  <body>
+
+<div id="all">
+	
+		<div id='cargr'>
+			<div class='input'>
+				<input id="l-btn" class='l-input' type="button" value="点击"/>
+				<input id="r-btn"  class='r-input' type="button" value="点击"/>
+			</div>
+			<ul id="box1">
+				
+			</ul>
+	   </div>
+</div>
+
+ </body>
+
+	 <script type="text/javascript">
+		
+		 var oBtr = document.getElementById("r-btn");
+		 var oBrl = document.getElementById("l-btn");
+		 var oAll = document.getElementById("all");
+		 var oCiger = document.getElementById("cargr");
+		 var oUl = document.getElementById("box1"); 
+		 var oLi = oUl.getElementsByTagName("li");
+		 var j=1;
+		 var time;
+		 var str = '';
+		 var arr=[]
+		 var autoTime = null;
+		 var startTime = new Date();
+		 var t
+		 var w 
+		 var drr = []
+		 var crr = []
+		 for (var i=0;i<24 ;i++ )
+		 {
+			str += '<li></li>'
+		 }
+
+		oUl.innerHTML  = str;
+		function rotate()
+		{	var oP = 0;
+			var bRius =100
+			var oWidth = 600;
+			var oHeihgt = 600;
+
+			for (var a=0;a<oLi.length;a++ )
+			{		
+				crr[a] =  Math.floor(Math.random()*1000-500)
+				drr[a] = crr[a]
+				drr.sort(function(a,b){return a-b})
+				w = Math.abs(drr[0])>Math.abs(drr[drr.length-1])?Math.abs(drr[0]):Math.abs(drr[drr.length-1])
+			}
+			t = setInterval(function(){
+				console.log(1)
+				
+				w--
+				oWidth--
+				oHeihgt--
+				if (oWidth<=213)
+				{
+					oWidth=213
+				}
+				if (oHeihgt<=213)
+				{
+					oHeihgt=199
+				}
+				if (w<=0)clearInterval(t)
+				oP++
+				
+				if (w<=100)
+				{
+					bRius--
+					if (bRius<=0)
+					{
+						bRius=0
+					}
+					
+				}
+				
+				console.log(bRius)
+				var newop = oP/100
+				for (var a=0;a<oLi.length;a++ )
+				{	 
+					crr[a]>0?crr[a]--:crr[a]++;
+					if (crr[a]==1)crr[a]=0
+				}	
+				
+				for (var i=0;i<oLi.length;i++ )
+				{	
+					var e = -Math.floor(i/6)*199;
+					var b = -i%6*213;
+					oLi[i].style.cssText = "background:url(images/"+1+".jpg) no-repeat;background-position:"+b+"px "+e+"px;transform:  translate("+crr[i]*.4+"px,"+crr[i]*.4+"px);opacity:"+newop*0.3+";border-radius:"+bRius+"%;width:"+oWidth+"px;height:"+oHeihgt+"px"	 
+				}
+			},5)
+		}	
+		rotate()
+
+		
+
+
+		function block(){
+			
+			for (var k=0;k<24;k++ )
+			{
+				arr[k] = k;
+			}	
+			time = setInterval(function(){	
+				if (arr.length<2){		
+					clearInterval(time)
+					doing=0
+				}
+				var ra = Math.floor(Math.random()*arr.length);
+				var e =  Math.floor(arr[ra]/6)*-199;
+				var b = arr[ra]%6*-213;			
+				oLi[arr[ra]].style.cssText = "background:url(images/"+j+".jpg) no-repeat;background-position:"+b+"px "+e+"px;;transform:rotateZ(0deg) translate(0px);opacity:1;border-radius:0%";
+				arr.splice(ra,1)
+			},35)//没35毫秒换一格
+		}
+		var doing
+		function autoplay(){//每2000秒轮播
+			doing=0;
+			
+			autoTime = setInterval(function(){
+					if(doing==1)  return ;
+					console.log(doing)
+					doing=1;
+					j++;
+					if(j>8)j=1;
+					block()
+			},2000)
+		}
+		
+//		autoplay()
+
+
+
+//		oCiger.onmouseover = function(){//鼠标放上去
+//			clearInterval(autoTime)
+//		}
+//		oCiger.onmouseout = function(){//鼠标离开
+//			autoplay()
+//		}
+
+		oBrl.onclick = function(){
+			if (new Date() - startTime>500)
+			{	clearInterval(time)
+				clearInterval(t)
+				j--;
+				if(j<1)j=8;
+				block()
+			}
+			startTime = new Date()
+		}//左点击
+
+
+		oBtr.onclick = function(){
+
+				if (new Date() - startTime>500)
+				{	clearInterval(time)
+					clearInterval(t)
+					j++;
+					if(j>8)j=1;
+					block()
+				}
+				startTime = new Date()
+		}//右点击
+
+
+
+		function shuffle(array){
+					return array.sort(function(a,b){return Math.random()>0.5})
+				}
+
+	</script>
+</html>

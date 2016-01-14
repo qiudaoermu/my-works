@@ -1,0 +1,7 @@
+$(document).mousewheel(function(event, delta, deltaX, deltaY)
+
+通过参数delta可以获取鼠标滚轮的方向和速度。
+如果delta的值是负的，那么滚轮就是向下滚动，正的就是向上。
+ deltaX, deltaY分别是滚轮滚动的坐标值
+event是滚轮的事件，是滚动还是点击等。
+

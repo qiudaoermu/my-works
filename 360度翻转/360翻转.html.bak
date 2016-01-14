@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en" onselectstart="return false">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+<style>
+*{margin:0;padding:0;}
+body{background:#000;}
+#wrap{
+	  width:133px;
+	  height:200px;
+	  border:1px solid red;
+	  margin:200px auto 0;
+	  position:relative;
+	  transform-style:preserve-3D;
+	 
+	  transform:perspective(800px) rotateY(0deg) rotateX(-10deg);
+	  }
+#wrap img{
+	 
+	  position:absolute;
+	 
+	  border-radius:5px;
+	  -webkit-box-reflect:below 8px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,.5)) ;
+	 box-shadow:0px 0px 10px #fff;
+
+}
+.add{width:5px;height:5px;position:absolute;background:#fff}
+#box{width:1000px;height:700px;border:4px solid #fff; transform-style:preserve-3D;perspective:400px;position:absolute;left:50%;margin-left:-500px;top:50%;margin-top:-400px}
+#box #nva1{width:1000px;height:700px; transform:rotateY(-45deg) translateZ(-250px);border:1px solid red;}
+</style>
+	</head>
+	<body>
+	<div id="box">
+		<div id="nva1"></div>
+		<div id="nva2"></div>
+		<div id="nva3"></div>
+	</div>
+		
+		<div id="wrap">
+		
+			<img src="img/1.jpg"/>
+			<img src="img/2.jpg"/>
+			<img src="img/3.jpg"/>
+			<img src="img/4.jpg"/>
+			<img src="img/5.jpg"/>
+			<img src="img/6.jpg"/>
+			<img src="img/7.jpg"/>
+			<img src="img/8.jpg"/>
+			<img src="img/9.jpg"/>
+			<img src="img/10.jpg"/>
+			<img src="img/11.jpg"/>
+
+		
+		</div>
+	
+	
+	</body>
+<script type="text/javascript" src="../js/jquery-1.11.3.min.js" ></script>
+<script >
+$(function(){
+		
+		var $wrap = $("#wrap img")
+		var Deg = 360/$wrap.size();
+		var oBox = $("#box")
+		 $wrap.each(function(i){
+			$(this).css({"transform":"rotateY("+i*Deg+"deg) translateZ(350px)","transition": "1s "+($wrap.length-i)*0.1+"s"})
+			this.ondragstart = function(){
+					return false;
+				}//不懂
+		})
+
+		var x,y,xn,yn,x_,y_;
+		var roY = 0
+		var roX = 0;
+		var num = 0;
+		$(document).mousedown(function(ev){
+				var ev = ev|| window.event;
+				x_ = ev.clientX;
+				y_ = ev.clientY;	
+			$(this).on('mousemove',function(ev){		
+				var ev = ev|| window.event;				
+				x = ev.clientX;
+				y = ev.clientY;
+				yn = y-y_;
+				xn = x-x_;
+				roX+=1;
+				roY-=yn*0.2;
+				$(document.body).append("<div  style='left:"+x+"px;top:"+y+"px' class='add'></div>")
+				$("#wrap").css("transform","perspective(800px)  rotateX("+roY+"deg) rotateY("+roX+"deg)")
+				x_=x;
+				y_=y;
+			})
+		}).mouseup(function(){
+			$(this).off('mousemove')
+				time = setInterval(function(){
+					yn*=0.95;
+					xn*=0.95;
+					roX+=xn*0.2;
+					roY-=yn*0.2;
+					if (Math.abs(xn)<0.1&&Math.abs(yn)<0.1)
+					{
+						clearInterval(time)
+					}
+					console.log(yn)
+					$("#wrap").css("transform","perspective(800px)  rotateX("+roY+"deg) rotateY("+roX+"deg)")
+					
+				},10)
+
+			})
+		oBox.hover(function(){
+			clearInterval(autotimer)
+		
+		},function(){
+			play();
+		})
+		play();
+		function play(){
+			autotimer = setInterval(function(){
+			roX+=.2;
+			$("#wrap").css("transform","perspective(800px) rotateX("+roY+"deg) rotateY("+roX+"deg)")
+		
+			},10)
+		}
+		
+})
+
+</script>
+
+</script>
+</html>

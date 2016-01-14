@@ -1,0 +1,127 @@
+﻿*{
+	margin:0px;
+	padding:0px;
+	font-family:'迷你简卡通';
+	font-size:28px;
+}
+html,body{
+	width:100%;
+	height:100%;
+	background-color:rgb(255, 213, 226)
+	
+}
+ul{
+	list-style:none;
+}
+#game{
+
+	width:800px;
+	height:600px;
+	margin:auto;
+	top:20%;
+}
+#game ul{
+	100%;
+	height:415px;
+}
+#game ul li{
+	width:50%;
+	height:100%;
+	float:left;
+	text-align:center;
+}
+#game ul div.anim{
+	width:223px;
+	height:337px;
+	border:10px solid #ff6699;
+	border-radius:50%;
+	margin:auto;
+	margin-top:20px;
+	background-position:center;
+	background-repeat:no-repeat;
+}
+div.user{
+	background-image:url("../images/readyl.png");
+
+}
+div.comp{
+	background-image:url("../images/readyr.png");
+
+}
+#game div.op{
+	width:100%;
+	text-align:center;
+
+}
+#game div.op button{
+	width:200px;
+	height:60px;
+	border:10px solid #ff6699;
+	background-color:rgb(254, 217, 227);
+	border-radius:50%;
+	outline:none;
+	cursor:pointer;
+}
+#game div.op button:hover{
+
+	border-color:#ff0000;
+	font-size:36px;
+	font-weight:bold;
+	background:#ff0000;
+	color:#fff;
+
+}
+#game div.op button.disable{
+	border-color:#bbb;
+	color:#bbb;
+	
+	background-color:#ccc;
+	cursor:default;
+
+}
+
+#game ul.guess {
+	width:220px;
+	height:100%;
+	position:fixed;
+	top:0px;
+	left:0px;
+	display:none;
+}
+#game ul.guess li{
+	width:100%;
+	height:32%;
+	
+}
+#game ul.guess li div{
+
+	width:100%;
+	height:90%;
+	border:10px solid #ff6699;
+	border-radius:50%;
+	background-position:center;
+	background-repeat:no-repeat;
+	cursor:pointer;
+	background-color:rgb(255, 213, 226)
+	
+}
+#game ul.guess li div:hover{
+	background-color:#ff6699;
+	color:#fff;
+}
+
+div.guess0{
+	background-image:url("../images/0.png");
+}
+div.guess1{
+	background-image:url("../images/1.png");
+}
+div.guess2{
+	background-image:url("../images/2.png");
+}
+#game div.text{
+	text-align:center;
+	margin-top:10px;
+	font-size:44px;
+	font-weight:bold;
+}
