@@ -3,13 +3,12 @@
  <head>
   <meta charset="UTF-8">
   <meta name="Generator" content="EditPlus®">
-  <meta name="Author" content="">
-  <meta name="Keywords" content="">
-  <meta name="Description" content="">
+
   <title>Document</title>
 <style>
 *{margin:0;padding:0;}
 body{background:#000;}
+
 #wrap{
 	  width:133px;
 	  height:200px;
@@ -17,13 +16,13 @@ body{background:#000;}
 	  margin:200px auto 0;
 	  position:relative;
 	  transform-style:preserve-3D;
-	 
+    background: red;
 	  transform:perspective(800px) rotateY(0deg) rotateX(-10deg);
 	  }
 #wrap img{
-	 
+
 	  position:absolute;
-	 
+
 	  border-radius:5px;
 	  -webkit-box-reflect:below 8px -webkit-linear-gradient(top,rgba(0,0,0,0) 40%,rgba(0,0,0,.5)) ;
 	 box-shadow:0px 0px 10px #fff;
@@ -41,16 +40,16 @@ body{background:#000;}
 	 top:50%;
 	 margin-top:-400px}
 #box #nva1{width:1000px;
-		   height:700px; 
+		   height:700px;
 		   transform:rotateY(-45deg) translateZ(-250px);
 		   border:1px solid red;}
 </style>
 	</head>
 	<body>
-	
-		
+
+
 		<div id="wrap">
-		
+
 			<img src="img/1.jpg"/>
 			<img src="img/2.jpg"/>
 			<img src="img/3.jpg"/>
@@ -63,15 +62,15 @@ body{background:#000;}
 			<img src="img/10.jpg"/>
 			<img src="img/11.jpg"/>
 
-		
+
 		</div>
-	
-	
+
+
 	</body>
 <script type="text/javascript" src="js/jquery-1.11.3.min.js" ></script>
 <script >
 $(function(){
-		
+
 		var $wrap = $("#wrap img")
 		var Deg = 360/$wrap.size();
 		var oBox = $("#box")
@@ -89,9 +88,9 @@ $(function(){
 		$(document).mousedown(function(ev){
 				var ev = ev|| window.event;
 				x_ = ev.clientX;
-				y_ = ev.clientY;	
-			$(this).on('mousemove',function(ev){		
-				var ev = ev|| window.event;				
+				y_ = ev.clientY;
+			$(this).on('mousemove',function(ev){
+				var ev = ev|| window.event;
 				x = ev.clientX;
 				y = ev.clientY;
 				yn = y-y_;
@@ -116,13 +115,13 @@ $(function(){
 					}
 					console.log(yn)
 					$("#wrap").css("transform","perspective(800px)  rotateX("+roY+"deg) rotateY("+roX+"deg)")
-					
+
 				},10)
 
 			})
 		oBox.hover(function(){
 			clearInterval(autotimer)
-		
+
 		},function(){
 			play();
 		})
@@ -131,10 +130,10 @@ $(function(){
 			autotimer = setInterval(function(){
 			roX+=.2;
 			$("#wrap").css("transform","perspective(800px) rotateX("+roY+"deg) rotateY("+roX+"deg)")
-		
+
 			},10)
 		}
-		
+
 })
 
 </script>
